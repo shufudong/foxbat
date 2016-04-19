@@ -1,0 +1,63 @@
+configure(allprojects) { project ->
+
+    group = projectGroup
+    version = projectVersion
+
+    sourceCompatibility = sourceCompatibility
+    targetCompatibility = targetCompatibility
+
+    apply plugin: "java"
+    apply plugin: "maven-publish"
+    apply plugin: "eclipse"
+    apply plugin: "idea"
+
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
+
+    tasks.withType(Javadoc) {
+        options.encoding = 'UTF-8'
+    }
+
+    /**
+     jar {manifest {attributes (
+     'Implementation': version,
+     'Specification-Version': version,
+     'Implementation-Vendor': 'bbossgroups',
+     'Implementation-ProductID': project.name,
+     'Compile-Timestamp': new Date().format('yyyy-MM-dd HH:mm:ss'),
+     'Compile-User': DEVELOPER_NAME
+     )}}*/
+
+    dependencies {
+        testCompile 'junit:junit:4.12'
+    }
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+
+    task sourcesJar(type: Jar) {
+        classifier = "sources"
+        from sourceSets.main.allJava
+    }
+
+    task javaDocJar(type: Jar, dependsOn: javadoc) {
+        classifier = "javadoc"
+        from javadoc.destinationDir
+    }
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+                artifact sourcesJar
+                artifact javaDocJar
+            }
+        }
+        repositories {
+            mavenLocal()
+        }
+    }
+}
