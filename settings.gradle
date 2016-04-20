@@ -1,3 +1,6 @@
 rootProject.name = 'foxbat-all'
 include 'framework:start'
 findProject(':framework:start')?.name = 'com.foxbat.framework.start'
+include 'framework:base'
+findProject(':framework:base')?.name = 'com.foxbat.framework.base'
+
